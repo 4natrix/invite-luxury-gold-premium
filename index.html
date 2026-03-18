@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Luxury Gold | Премиум приглашение</title>
+    <title>Luxury Gold | Премиум с музыкой</title>
     <style>
         * {
             margin: 0;
@@ -35,6 +35,98 @@
             box-shadow: 0 30px 60px rgba(0,0,0,0.95);
             position: relative;
             overflow: hidden;
+        }
+        
+        /* Кнопка музыки */
+        .music-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #d4af37;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+        
+        .music-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.6);
+        }
+        
+        .music-button.playing {
+            background: #e5c158;
+        }
+        
+        .music-button svg {
+            width: 30px;
+            height: 30px;
+            fill: #0c0b0a;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(212, 175, 55, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(212, 175, 55, 0);
+            }
+        }
+        
+        .sound-wave {
+            display: none;
+            position: fixed;
+            bottom: 100px;
+            right: 40px;
+            gap: 3px;
+            z-index: 999;
+        }
+        
+        .sound-wave.playing {
+            display: flex;
+        }
+        
+        .sound-wave span {
+            width: 4px;
+            height: 15px;
+            background: #d4af37;
+            border-radius: 2px;
+            animation: wave 1s infinite ease-in-out;
+        }
+        
+        .sound-wave span:nth-child(2) {
+            animation-delay: 0.2s;
+            height: 25px;
+        }
+        
+        .sound-wave span:nth-child(3) {
+            animation-delay: 0.4s;
+            height: 20px;
+        }
+        
+        .sound-wave span:nth-child(4) {
+            animation-delay: 0.6s;
+            height: 15px;
+        }
+        
+        @keyframes wave {
+            0%, 100% {
+                transform: scaleY(0.5);
+            }
+            50% {
+                transform: scaleY(1.5);
+            }
         }
         
         /* Декоративные элементы */
@@ -490,36 +582,6 @@
             color: #0c0b0a;
         }
         
-        /* ===== ПОДАРКИ ===== */
-        .gift-section {
-            margin: 50px 0;
-            text-align: center;
-        }
-        
-        .gift-text {
-            font-size: 18px;
-            color: #e5d5b5;
-            margin-bottom: 20px;
-        }
-        
-        .gift-button {
-            display: inline-block;
-            background: transparent;
-            border: 2px solid #d4af37;
-            color: #d4af37;
-            padding: 15px 40px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-size: 18px;
-            letter-spacing: 2px;
-            transition: all 0.3s;
-        }
-        
-        .gift-button:hover {
-            background: #d4af37;
-            color: #0c0b0a;
-        }
-        
         /* ===== RSVP ФОРМА ===== */
         .rsvp-section {
             margin: 50px 0;
@@ -770,6 +832,18 @@
             .map-frame {
                 height: 250px;
             }
+            
+            .music-button {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+            }
+            
+            .sound-wave {
+                bottom: 80px;
+                right: 30px;
+            }
         }
         
         @media (max-width: 480px) {
@@ -824,6 +898,28 @@
     </style>
 </head>
 <body>
+    <!-- Музыкальный плеер -->
+    <audio id="bgMusic" loop preload="auto">
+        <!-- ЗДЕСЬ ВСТАВЬ ССЫЛКУ НА МУЗЫКУ -->
+        <source src="https://assets.mixkit.co/music/672/672.mp3" type="audio/mpeg">
+        Ваш браузер не поддерживает аудио.
+    </audio>
+    
+    <!-- Кнопка управления музыкой -->
+    <button class="music-button" id="musicToggle" onclick="toggleMusic()">
+        <svg viewBox="0 0 24 24">
+            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+        </svg>
+    </button>
+    
+    <!-- Визуализация звука -->
+    <div class="sound-wave" id="soundWave">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
     <div class="container">
         <div class="card">
             <div class="content">
@@ -1041,16 +1137,6 @@
                     </div>
                 </div>
                 
-                <!-- ===== ПОДАРКИ ===== -->
-                <div class="gift-section">
-                    <h2>ПОДАРКИ</h2>
-                    <div class="gift-text">
-                        Для нас главное — ваше присутствие!<br>
-                        Но если хотите сделать подарок, будем рады помощи в нашем свадебном путешествии.
-                    </div>
-                   
-                </div>
-                
                 <!-- ===== RSVP ===== -->
                 <div class="rsvp-section">
                     <div class="rsvp-title">ПОДТВЕРДИТЕ ПРИСУТСТВИЕ</div>
@@ -1174,6 +1260,37 @@
             const tabs = document.querySelectorAll('.map-tab');
             tabs.forEach(tab => tab.classList.remove('active'));
             element.classList.add('active');
+        }
+        
+        // Управление музыкой
+        let isPlaying = false;
+        const audio = document.getElementById('bgMusic');
+        const musicButton = document.getElementById('musicToggle');
+        const soundWave = document.getElementById('soundWave');
+        
+        // Пытаемся автоматически включить музыку
+        document.addEventListener('click', function initAudio() {
+            if (!isPlaying) {
+                audio.play().then(() => {
+                    isPlaying = true;
+                    musicButton.classList.add('playing');
+                    soundWave.classList.add('playing');
+                }).catch(e => console.log('Автовоспроизведение заблокировано'));
+            }
+            document.removeEventListener('click', initAudio);
+        }, { once: true });
+        
+        function toggleMusic() {
+            if (isPlaying) {
+                audio.pause();
+                musicButton.classList.remove('playing');
+                soundWave.classList.remove('playing');
+            } else {
+                audio.play();
+                musicButton.classList.add('playing');
+                soundWave.classList.add('playing');
+            }
+            isPlaying = !isPlaying;
         }
     </script>
 </body>
